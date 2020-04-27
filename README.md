@@ -44,13 +44,15 @@ Body:
 ```
 - `url` - optional property, used to parse deck name(e.g. ITA) from Babbel API.
 - `deckName` - optional property, used to parse deck name(e.g. ITALIAN)
-- `learned_items` - array of object, each corresponds to a specific word/card.  
+- `learned_items` - array of objects, each object corresponds to a specific word/card.  
 
 `Babbel2Anki` 
 - converts such json into a file `deck/<DECK_NAME>.csv` with following format:  
 `<learnLanguageText>|<img src='<imageId>.png'/>|<displayLanguageText>>|[sound:<audioId>.mp3]`. E.g.:  
 `Tu cosa prendi?|<img src='f94032b1573e4f069882beb65c1fdb1c.png'/>|What will you have?|[sound:770973f99b53425cbb17de68ab1964e0.mp3]`
-- downloads all resources(images and audios) to `collection.media` folder(for me it's `"/Users/pavelgordon/Library/Application Support/Anki2/Pavel/collection.media"`)
+- downloads all resources(images and audios) to `collection.media` folder(e.g.: `"/Users/pavelgordon/Library/Application Support/Anki2/Pavel/collection.media"`)
 ## How to import to Anki
 - During import use delimiter `|`.
 - TBD
+## Contact
+Feel free to shoot a message at `gordon.pav@gmail.com`
