@@ -1,5 +1,6 @@
 ## Babbel2Anki
-Fetches vocabulary from [Babbel](babbel.com) and exports it to Anki-compatible deck.
+Fetches vocabulary from [Babbel](babbel.com) and exports it to Anki-compatible deck.  
+Better to use with [babbel-chrome-extension](https://github.com/pavelgordon/babbel-chrome-extension), but can work standalone.
 ## Tech/framework used
 - Kotlin/Ktor
 - Gradle
@@ -11,7 +12,7 @@ Fetches vocabulary from [Babbel](babbel.com) and exports it to Anki-compatible d
 ## How to run?
 ### Via IntelliJ
 * Run `Application.kt`
-* Or run IntelliJ profile from .run directory
+* Or run IntelliJ profile from `.run` directory
 #### Via Jar
 * `./gradlew build`
 * `java -jar build/libs/babbel2anki-0.0.1.jar`
@@ -54,5 +55,9 @@ Body:
 ## How to import to Anki
 - During import use delimiter `|`.
 - TBD
+
+## Plans
+- Use AnkiConnect to import directly to Anki deck
+
 ## Contact
 Feel free to shoot a message at `gordon.pav@gmail.com`
