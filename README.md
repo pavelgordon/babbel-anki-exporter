@@ -1,5 +1,5 @@
 ## Babbel2Anki
-Fetches vocabulary from [Babbel](babbel.com) and exports it to Anki-compatible deck. Better to use with [babbel-chrome-extension](https://github.com/pavelgordon/babbel-chrome-extension), but can work standalone.
+Fetches vocabulary from [Babbel](https://babbel.com) and exports it to Anki-compatible deck. Better to use with [babbel-chrome-extension](https://github.com/pavelgordon/babbel-chrome-extension), but can work standalone.
 ## Tech/framework used
 - Kotlin/Ktor
 - Gradle
