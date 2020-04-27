@@ -77,10 +77,14 @@ fun Application.module(testing: Boolean = false) {
     routing {
         post("/dictionary/download") {
             val data = call.receive<BabbelData>()
+            val deckName = call.request.queryParameters["deckName"]
+                ?: data.url?.substringAfter("learn_languages/")?.substringBefore("/learned_items")
+                ?: "deck"
+            //url format "https://api.babbel.io/gamma/v5/en/accounts/4434c6db8cdc475783477885d114998b/learn_languages/ITA/learned_items?per_page=10&sort=last_reviewed_at"
 
             suspend fun downloadFile(url: String, fileName: String) {
                 if (File(fileName).exists()) {
-                    log.info("No need to download $url")
+                    log.debug("No need to download $url")
                     return
                 }
                 val file: HttpResponse = client.get { url(url) }
@@ -88,16 +92,32 @@ fun Application.module(testing: Boolean = false) {
                 log.info("Downloaded $fileName from url $url")
             }
 
-            val existingDeck = File("decks/deck.csv").readLines().map { it.substringBefore("|") }
-            val newWords = data.learnedItems
+            val file = File("decks/$deckName.csv")
+            val existingDeck =
+                when {
+                    file.exists() -> file.readLines()
+                        .filterNot { it.isEmpty() }
+                        .map { it.substringBefore("|") }
+                    else -> listOf()
+                }
+            val newCards = data.learnedItems
                 .filterNot { it.learnLanguageText in existingDeck }
                 .onEach { item ->
                     downloadFile(item.image.id.toImageUrl(), "$pathToAnkiResources/${item.image.id}.png")
                     downloadFile(item.sound.id.toAudioUrl(), "$pathToAnkiResources/${item.sound.id}.mp3")
                 }
-                .joinToString(separator = "\n", postfix = "\n") { it.format() }
-            File("decks/deck.csv").appendText(newWords)
-            call.respond(mapOf("result" to "Success! Now import /decks/deck.csv to Anki using delimiter |"))
+
+            if(newCards.isNotEmpty()) {
+                file.appendText(newCards.joinToString(separator = "\n", postfix = "\n") { it.format() })
+            }
+            call.response.headers.append("Access-Control-Allow-Origin", "*")
+            call.respond(
+                mapOf(
+                    "status" to "Success! Now import /decks/$deckName.csv to Anki using delimiter |",
+                    "new" to newCards.size,
+                    "total" to data.learnedItems.size
+                )
+            )
         }
     }
 }
@@ -108,7 +128,8 @@ fun String.toAudioUrl() = """https://sounds.babbel.com/v1.0.0/sounds/$this/norma
 
 data class BabbelData(
     @SerializedName("learned_items")
-    val learnedItems: List<Item>
+    val learnedItems: List<Item>,
+    val url: String?
 )
 
 data class Item(
